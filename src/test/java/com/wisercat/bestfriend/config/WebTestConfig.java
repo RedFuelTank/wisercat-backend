@@ -1,10 +1,13 @@
 package com.wisercat.bestfriend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wisercat.bestfriend.exception.handler.ExceptionsHandler;
-import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetService;
+import com.wisercat.bestfriend.controller.pets_controller.add_use_case.PetsAddUseCase;
 import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetUseCase;
+import com.wisercat.bestfriend.dto.PetDto;
+import com.wisercat.bestfriend.exception.handler.ExceptionsHandler;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+
+import java.util.List;
 
 public final class WebTestConfig {
     private WebTestConfig() {}
@@ -24,6 +27,25 @@ public final class WebTestConfig {
     }
 
     public static PetsGetUseCase getPetsGetUseCaseImpl() {
-        return new PetsGetService();
+        return new PetsGetUseCase() {
+            @Override
+            public PetDto getById(Long id) {
+                return null;
+            }
+
+            @Override
+            public List<PetDto> getAll() {
+                return null;
+            }
+        };
+    }
+
+    public static PetsAddUseCase getPetsAddUseCaseImpl() {
+        return new PetsAddUseCase() {
+            @Override
+            public PetDto save(PetDto pet) {
+                return null;
+            }
+        };
     }
 }

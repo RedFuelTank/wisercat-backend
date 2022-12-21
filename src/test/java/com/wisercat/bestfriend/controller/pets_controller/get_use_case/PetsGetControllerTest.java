@@ -1,7 +1,6 @@
 package com.wisercat.bestfriend.controller.pets_controller.get_use_case;
 
 import com.wisercat.bestfriend.GetRequestBuilder;
-import com.wisercat.bestfriend.config.WebTestConfig;
 import com.wisercat.bestfriend.dto.PetDto;
 import com.wisercat.bestfriend.dto.enums.CountryOrigin;
 import com.wisercat.bestfriend.dto.enums.FurColor;
@@ -17,13 +16,12 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
-import static com.wisercat.bestfriend.config.WebTestConfig.getExceptionHandler;
-import static com.wisercat.bestfriend.config.WebTestConfig.getObjectMapperHttpMessageConverter;
+import static com.wisercat.bestfriend.config.WebTestConfig.*;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.hasSize;
 class PetsGetControllerTest {
 
     private GetRequestBuilder getRequestBuilder;
@@ -31,7 +29,7 @@ class PetsGetControllerTest {
 
     @BeforeEach
     void init() {
-        service = mock(WebTestConfig.getPetsGetUseCaseImpl().getClass());
+        service = mock(getPetsGetUseCaseImpl().getClass());
         PetsGetController controller = new PetsGetController(service);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(getObjectMapperHttpMessageConverter())
@@ -58,9 +56,7 @@ class PetsGetControllerTest {
         class dataHasSuccessfullyBeenFound {
             @BeforeEach
             void init() {
-                petDto = new PetDto(PET_NAME, PET_CODE, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-                petDto.setId(PET_ID);
-
+                petDto = new PetDto(PET_ID, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
                 given(service.getById(PET_ID)).willReturn(petDto);
             }
 
@@ -182,16 +178,16 @@ class PetsGetControllerTest {
             @BeforeEach
             void init() {
                 PetDto firstPetDto = new PetDto(
-                        FIRST_PET_NAME,
                         FIRST_PET_CODE,
+                        FIRST_PET_NAME,
                         FIRST_PET_TYPE,
                         FIRST_PET_FUR_COLOR,
                         FIRST_PET_COUNTRY_OF_ORIGIN);
                 firstPetDto.setId(FIRST_PET_ID);
 
                 PetDto secondPetDto = new PetDto(
-                        SECOND_PET_NAME,
                         SECOND_PET_CODE,
+                        SECOND_PET_NAME,
                         SECOND_PET_TYPE,
                         SECOND_PET_FUR_COLOR,
                         SECOND_PET_COUNTRY_OF_ORIGIN
