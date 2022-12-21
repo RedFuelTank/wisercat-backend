@@ -29,7 +29,7 @@ class PetsGetControllerTest {
 
     @BeforeEach
     void init() {
-        service = mock(getPetsGetUseCaseImpl().getClass());
+        service = mock(getPetsGetServiceImpl().getClass());
         PetsGetController controller = new PetsGetController(service);
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(getObjectMapperHttpMessageConverter())

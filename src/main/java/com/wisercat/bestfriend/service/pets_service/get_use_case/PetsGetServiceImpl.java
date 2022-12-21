@@ -4,7 +4,9 @@ import com.wisercat.bestfriend.dto.PetDto;
 
 import java.util.List;
 
-public class PetsGetService implements com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetService {
+import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetService;
+
+public class PetsGetServiceImpl implements PetsGetService {
     @Override
     public PetDto getById(Long id) {
         return null;

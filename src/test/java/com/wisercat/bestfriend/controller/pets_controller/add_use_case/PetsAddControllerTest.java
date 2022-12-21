@@ -28,7 +28,7 @@ class PetsAddControllerTest {
 
     @BeforeEach
     void init() {
-        service = mock(getPetsAddUseCaseImpl().getClass());
+        service = mock(getPetsAddServiceImpl().getClass());
 
         PetsAddController controller = new PetsAddController(service);
 

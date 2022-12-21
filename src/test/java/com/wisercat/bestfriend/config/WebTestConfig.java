@@ -26,7 +26,7 @@ public final class WebTestConfig {
         return new ExceptionsHandler();
     }
 
-    public static PetsGetService getPetsGetUseCaseImpl() {
+    public static PetsGetService getPetsGetServiceImpl() {
         return new PetsGetService() {
             @Override
             public PetDto getById(Long id) {
@@ -40,7 +40,7 @@ public final class WebTestConfig {
         };
     }
 
-    public static PetsAddService getPetsAddUseCaseImpl() {
+    public static PetsAddService getPetsAddServiceImpl() {
         return new PetsAddService() {
             @Override
             public PetDto save(PetDto pet) {
@@ -48,4 +48,5 @@ public final class WebTestConfig {
             }
         };
     }
+
 }
