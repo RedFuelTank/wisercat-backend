@@ -6,10 +6,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 
-public class RequestBuilder {
+public class GetRequestBuilder {
     private MockMvc mockMvc;
 
-    public RequestBuilder(MockMvc mockMvc) {
+    public GetRequestBuilder(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }
 
@@ -20,4 +20,5 @@ public class RequestBuilder {
     public ResultActions getAll() throws Exception {
         return mockMvc.perform(get("/pets"));
     }
+
 }

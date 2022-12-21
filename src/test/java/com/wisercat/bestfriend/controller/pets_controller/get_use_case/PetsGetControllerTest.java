@@ -1,6 +1,6 @@
 package com.wisercat.bestfriend.controller.pets_controller.get_use_case;
 
-import com.wisercat.bestfriend.RequestBuilder;
+import com.wisercat.bestfriend.GetRequestBuilder;
 import com.wisercat.bestfriend.config.WebTestConfig;
 import com.wisercat.bestfriend.dto.PetDto;
 import com.wisercat.bestfriend.dto.enums.CountryOrigin;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.hamcrest.Matchers.hasSize;
 class PetsGetControllerTest {
 
-    private RequestBuilder requestBuilder;
+    private GetRequestBuilder getRequestBuilder;
     private PetsGetUseCase service;
 
     @BeforeEach
@@ -38,7 +38,7 @@ class PetsGetControllerTest {
                 .setMessageConverters(getObjectMapperHttpMessageConverter())
                 .setControllerAdvice(getExceptionHandler())
                 .build();
-        requestBuilder = new RequestBuilder(mockMvc);
+        getRequestBuilder = new GetRequestBuilder(mockMvc);
     }
 
     @Nested
@@ -68,21 +68,21 @@ class PetsGetControllerTest {
             @Test
             @DisplayName("Should return HTTP response code 200")
             void shouldReturnHttpResponseCodeOK() throws Exception {
-                requestBuilder.getById(PET_ID)
+                getRequestBuilder.getById(PET_ID)
                         .andExpect(status().isOk());
             }
 
             @Test
             @DisplayName("Should return HTTP response with JSON media-type")
             void shouldReturnHttpResponseJsonMediaType() throws Exception {
-                requestBuilder.getById(PET_ID)
+                getRequestBuilder.getById(PET_ID)
                         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
             }
 
             @Test
             @DisplayName("Should return JSON with correct data")
             void shouldReturnCorrectData() throws Exception {
-                requestBuilder.getById(PET_ID)
+                getRequestBuilder.getById(PET_ID)
                         .andExpect(jsonPath("$.id", equalTo(PET_ID.intValue())))
                         .andExpect(jsonPath("$.name", equalTo(PET_NAME)))
                         .andExpect(jsonPath("$.code", equalTo(PET_CODE)))
@@ -108,21 +108,21 @@ class PetsGetControllerTest {
             @Test
             @DisplayName("Should return HTTP response code 404")
             void shouldReturnHttpResponseCodeNotFound() throws Exception {
-                requestBuilder.getById(PET_ID)
+                getRequestBuilder.getById(PET_ID)
                         .andExpect(status().isNotFound());
             }
 
             @Test
             @DisplayName("Should return HTTP response with JSON media-type")
             void shouldReturnHttpResponseJsonMediaType() throws Exception {
-                requestBuilder.getById(PET_ID)
+                getRequestBuilder.getById(PET_ID)
                         .andExpect(content().contentType(MediaType.APPLICATION_JSON));
             }
 
             @Test
             @DisplayName("Should return HTTP response with correct body")
             void shouldReturnHttpResponseEmptyBody() throws Exception {
-                requestBuilder.getById(PET_ID)
+                getRequestBuilder.getById(PET_ID)
                         .andExpect(jsonPath("$.name", equalTo(NotFoundException.class.getSimpleName())))
                         .andExpect(jsonPath("$.message", equalTo(PET_HAS_NOT_BEEN_FOUND_MESSAGE)));
             }
@@ -136,14 +136,14 @@ class PetsGetControllerTest {
         @Test
         @DisplayName("Should return the HTTP status 200")
         void shouldReturnHttpStatusOk() throws Exception {
-            requestBuilder.getAll()
+            getRequestBuilder.getAll()
                     .andExpect(status().isOk());
         }
 
         @Test
         @DisplayName("Should return HTTP response with JSON media-type")
         void shouldReturnCorrectMethodType() throws Exception {
-            requestBuilder.getAll()
+            getRequestBuilder.getAll()
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON));
         }
 
@@ -158,7 +158,7 @@ class PetsGetControllerTest {
             @Test
             @DisplayName("Should return empty list")
             void shouldReturnEmptyList() throws Exception {
-                requestBuilder.getAll()
+                getRequestBuilder.getAll()
                         .andExpect(jsonPath("$", hasSize(0)));
             }
         }
@@ -205,7 +205,7 @@ class PetsGetControllerTest {
             @Test
             @DisplayName("Should return correct data of first pet")
             void shouldReturnCorrectDataFirstPet() throws Exception {
-                requestBuilder.getAll()
+                getRequestBuilder.getAll()
                         .andExpect(jsonPath("$[0].id", equalTo(FIRST_PET_ID.intValue())))
                         .andExpect(jsonPath("$[0].name", equalTo(FIRST_PET_NAME)))
                         .andExpect(jsonPath("$[0].code", equalTo(FIRST_PET_CODE)))
@@ -217,7 +217,7 @@ class PetsGetControllerTest {
             @Test
             @DisplayName("Should return correct data of second pet")
             void shouldReturnCorrectDataSecondPet() throws Exception {
-                requestBuilder.getAll()
+                getRequestBuilder.getAll()
                         .andExpect(jsonPath("$[1].id", equalTo(SECOND_PET_ID.intValue())))
                         .andExpect(jsonPath("$[1].name", equalTo(SECOND_PET_NAME)))
                         .andExpect(jsonPath("$[1].code", equalTo(SECOND_PET_CODE)))
