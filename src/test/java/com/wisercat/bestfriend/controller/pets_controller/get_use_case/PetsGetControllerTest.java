@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PetsGetControllerTest {
 
     private GetRequestBuilder getRequestBuilder;
-    private PetsGetUseCase service;
+    private PetsGetService service;
 
     @BeforeEach
     void init() {

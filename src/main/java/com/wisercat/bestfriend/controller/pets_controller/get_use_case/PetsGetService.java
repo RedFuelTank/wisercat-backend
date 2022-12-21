@@ -4,7 +4,7 @@ import com.wisercat.bestfriend.dto.PetDto;
 
 import java.util.List;
 
-public interface PetsGetUseCase {
+public interface PetsGetService {
     PetDto getById(Long id);
 
     List<PetDto> getAll();

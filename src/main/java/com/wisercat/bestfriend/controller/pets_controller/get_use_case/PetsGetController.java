@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class PetsGetController {
-    private final PetsGetUseCase service;
+    private final PetsGetService service;
     @GetMapping("/pets/{id}")
     public PetDto findById(@PathVariable Long id) {
         return service.getById(id);

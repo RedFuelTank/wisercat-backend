@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class PetsAddController {
-    private final PetsAddUseCase service;
+    private final PetsAddService service;
     @PostMapping("/pets")
     @ResponseStatus(HttpStatus.CREATED)
     public PetDto save(@RequestBody @Valid PetDto petDto) {
