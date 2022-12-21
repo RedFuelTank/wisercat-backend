@@ -4,24 +4,40 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wisercat.bestfriend.dto.enums.CountryOrigin;
 import com.wisercat.bestfriend.dto.enums.FurColor;
 import com.wisercat.bestfriend.dto.enums.PetType;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
 
 @Getter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class PetDto {
     @JsonProperty(namespace = "id")
     @Setter
     private Long id;
-    @JsonProperty(required = true, namespace = "name")
-    private final String name;
     @JsonProperty(required = true, namespace = "code")
-    private final String code;
+    @NotNull
+    @Size(min = 1, max = 50)
+    private String code;
+    @JsonProperty(required = true, namespace = "name")
+    @NotNull
+    @Size(min = 1, max = 50)
+    private String name;
     @JsonProperty(required = true, namespace = "type")
-    private final PetType type;
+    @NotNull
+    private PetType type;
     @JsonProperty(required = true, namespace = "furColor")
-    private final FurColor furColor;
+    @NotNull
+    private FurColor furColor;
     @JsonProperty(required = true, namespace = "countryOrigin")
-    private final CountryOrigin countryOrigin;
+    @NotNull
+    private CountryOrigin countryOrigin;
+
+    public PetDto(String code, String name, PetType type, FurColor furColor, CountryOrigin countryOrigin) {
+        this.code = code;
+        this.name = name;
+        this.type = type;
+        this.furColor = furColor;
+        this.countryOrigin = countryOrigin;
+    }
 }
