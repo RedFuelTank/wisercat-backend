@@ -3,7 +3,7 @@ package com.wisercat.bestfriend.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisercat.bestfriend.exception.handler.ExceptionsHandler;
 import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetService;
-import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetUseCase;
+import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetUseCase;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 public final class WebTestConfig {

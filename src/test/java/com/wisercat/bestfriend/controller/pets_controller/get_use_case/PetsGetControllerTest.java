@@ -7,7 +7,6 @@ import com.wisercat.bestfriend.dto.enums.CountryOrigin;
 import com.wisercat.bestfriend.dto.enums.FurColor;
 import com.wisercat.bestfriend.dto.enums.PetType;
 import com.wisercat.bestfriend.exception.NotFoundException;
-import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
