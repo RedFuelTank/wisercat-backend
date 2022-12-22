@@ -5,9 +5,11 @@ import com.wisercat.bestfriend.controller.pets_controller.add_use_case.PetsAddSe
 import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetService;
 import com.wisercat.bestfriend.dto.PetDto;
 import com.wisercat.bestfriend.exception.handler.ExceptionsHandler;
+import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetRepository;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.util.List;
+import java.util.Optional;
 
 public final class WebTestConfig {
     private WebTestConfig() {}
@@ -44,6 +46,20 @@ public final class WebTestConfig {
         return new PetsAddService() {
             @Override
             public PetDto save(PetDto pet) {
+                return null;
+            }
+        };
+    }
+
+    public static PetsGetRepository getPetsGetRepositoryImpl() {
+        return new PetsGetRepository() {
+            @Override
+            public Optional<PetDto> getById(Long id) {
+                return null;
+            }
+
+            @Override
+            public List<PetDto> getAll() {
                 return null;
             }
         };
