@@ -5,6 +5,7 @@ import com.wisercat.bestfriend.dto.PetDto;
 import com.wisercat.bestfriend.dto.enums.CountryOrigin;
 import com.wisercat.bestfriend.dto.enums.FurColor;
 import com.wisercat.bestfriend.dto.enums.PetType;
+import com.wisercat.bestfriend.exception.DataAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -175,31 +176,71 @@ class PetsAddControllerTest {
 
             @BeforeEach
             void returnPet() {
-                PetDto petDto = new PetDto(PET_NAME, PET_CODE, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-                given(service.save(petDto)).willReturn(petDto);
+                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                given(service.save(any())).willReturn(petDto);
             }
 
             @Test
+            @DisplayName("Should return Http response code 201")
             void returnCorrectHttpStatusCodeCreated() throws Exception {
-//                requestBuilder.addPet().andExpect(status().isCreated());
+                requestBuilder.save(petDto)
+                        .andExpect(status().isCreated());
             }
 
             @Test
             @DisplayName("Should return pet data with correct data")
             void returnCorrectPet() throws Exception {
-//                requestBuilder.addPet()
-//                        .andExpect(jsonPath("$.name", equalTo(PET_NAME)))
-//                        .andExpect(jsonPath("$.code", equalTo(PET_CODE)))
-//                        .andExpect(jsonPath("$.type", equalTo(PET_TYPE.toString())))
-//                        .andExpect(jsonPath("$.furColor", equalTo(PET_FUR_COLOR.toString())))
-//                        .andExpect(jsonPath("$.countryOrigin", equalTo(PET_COUNTRY_OF_ORIGIN.toString())));
+                requestBuilder.save(petDto)
+                        .andExpect(jsonPath("$.name", equalTo(PET_NAME)))
+                        .andExpect(jsonPath("$.code", equalTo(PET_CODE)))
+                        .andExpect(jsonPath("$.type", equalTo(PET_TYPE.toString())))
+                        .andExpect(jsonPath("$.furColor", equalTo(PET_FUR_COLOR.toString())))
+                        .andExpect(jsonPath("$.countryOrigin", equalTo(PET_COUNTRY_OF_ORIGIN.toString())));
             }
         }
 
         @Nested
-        @DisplayName("Pet has not successfully been added")
+        @DisplayName("When pet has not successfully been added")
         class petHasNotSuccessfullyBeenAdded {
+            private final static String DATA_ALREADY_EXISTS_EXCEPTION_MESSAGE =
+                    "This data is already exists in database";
 
+            @BeforeEach
+            void init() {
+                petDto = new PetDto(PET_ID, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                given(service.save(any()))
+                        .willThrow(new DataAlreadyExistsException(
+                                DATA_ALREADY_EXISTS_EXCEPTION_MESSAGE
+                        ));
+            }
+
+            @Test
+            @DisplayName("Should return HTTP response code 409")
+            void shouldReturnHttpResponseCodeConflict() throws Exception {
+                requestBuilder.save(petDto)
+                        .andExpect(status().isConflict());
+            }
+
+            @Test
+            @DisplayName("Should return HTTP response with JSON media-type")
+            void shouldReturnHttpResponseJsonMediaType() throws Exception {
+                requestBuilder.save(petDto)
+                        .andExpect(
+                                content().contentType(MediaType.APPLICATION_JSON)
+                        );
+            }
+
+            @Test
+            @DisplayName("Should return correct HTTP response body")
+            void shouldReturnCorrectHttpResponseBody() throws Exception {
+                requestBuilder.save(petDto)
+                        .andExpect(jsonPath("$.name", equalTo(
+                                DataAlreadyExistsException.class.getSimpleName()
+                        )))
+                        .andExpect(jsonPath("$.message", equalTo(
+                                DATA_ALREADY_EXISTS_EXCEPTION_MESSAGE
+                        )));
+            }
         }
     }
 }

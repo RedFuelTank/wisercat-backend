@@ -1,5 +1,6 @@
 package com.wisercat.bestfriend.exception.handler;
 
+import com.wisercat.bestfriend.exception.DataAlreadyExistsException;
 import com.wisercat.bestfriend.exception.NotFoundException;
 import com.wisercat.bestfriend.exception.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,15 @@ public class ExceptionsHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponseEntity onException(NotFoundException exception) {
+        return new ErrorResponseEntity(
+                exception.getClass().getSimpleName(),
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponseEntity onException(DataAlreadyExistsException exception) {
         return new ErrorResponseEntity(
                 exception.getClass().getSimpleName(),
                 exception.getMessage()
