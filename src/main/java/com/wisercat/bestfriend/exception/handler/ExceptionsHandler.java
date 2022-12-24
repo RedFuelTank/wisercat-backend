@@ -1,6 +1,7 @@
 package com.wisercat.bestfriend.exception.handler;
 
 import com.wisercat.bestfriend.exception.DataAlreadyExistsException;
+import com.wisercat.bestfriend.exception.InvalidParameterException;
 import com.wisercat.bestfriend.exception.NotFoundException;
 import com.wisercat.bestfriend.exception.validation.ValidationErrors;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,15 @@ public class ExceptionsHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponseEntity onException(InvalidParameterException exception) {
+        return new ErrorResponseEntity(
+                exception.getClass().getSimpleName(),
+                exception.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ValidationErrors validate(MethodArgumentNotValidException exception) {
         var fields = exception.getBindingResult().getFieldErrors();
 
@@ -41,9 +51,9 @@ public class ExceptionsHandler {
         return validationErrors;
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    private String onException(Exception exception) {
-        return "internal error!";
-    }
+//    @ExceptionHandler
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    private String onException(Exception exception) {
+//        return "internal error!";
+//    }
 }

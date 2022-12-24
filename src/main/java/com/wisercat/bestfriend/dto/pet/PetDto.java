@@ -15,6 +15,10 @@ public class PetDto {
     @JsonProperty(namespace = "id")
     @Setter
     private Long id;
+
+    @JsonProperty(namespace = "ownerUsername")
+    @Setter
+    private String ownerUsername;
     @JsonProperty(required = true, namespace = "code")
     @NotNull
     @Size(min = 1, max = 50)
