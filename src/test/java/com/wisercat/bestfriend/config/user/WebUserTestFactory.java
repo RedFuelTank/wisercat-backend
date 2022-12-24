@@ -6,7 +6,7 @@ import com.wisercat.bestfriend.dto.user.UserDto;
 
 import java.util.List;
 
-public class WebUserTestConfig {
+public class WebUserTestFactory {
 
     public static UserGetService getUserGetServiceImpl() {
         return new UserGetService() {

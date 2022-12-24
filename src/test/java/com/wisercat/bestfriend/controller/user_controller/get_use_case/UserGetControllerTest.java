@@ -20,7 +20,7 @@ import java.util.List;
 
 import static com.wisercat.bestfriend.config.WebTestConfig.getExceptionHandler;
 import static com.wisercat.bestfriend.config.WebTestConfig.getObjectMapperHttpMessageConverter;
-import static com.wisercat.bestfriend.config.user.WebUserTestConfig.getUserGetServiceImpl;
+import static com.wisercat.bestfriend.config.user.WebUserTestFactory.getUserGetServiceImpl;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
