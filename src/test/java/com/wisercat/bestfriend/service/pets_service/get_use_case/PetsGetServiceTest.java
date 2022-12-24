@@ -1,10 +1,10 @@
 package com.wisercat.bestfriend.service.pets_service.get_use_case;
 
 import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetService;
-import com.wisercat.bestfriend.dto.PetDto;
-import com.wisercat.bestfriend.dto.enums.CountryOrigin;
-import com.wisercat.bestfriend.dto.enums.FurColor;
-import com.wisercat.bestfriend.dto.enums.PetType;
+import com.wisercat.bestfriend.dto.pet.PetDto;
+import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
+import com.wisercat.bestfriend.dto.pet.enums.FurColor;
+import com.wisercat.bestfriend.dto.pet.enums.PetType;
 import com.wisercat.bestfriend.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static com.wisercat.bestfriend.config.WebTestConfig.getPetsGetRepositoryImpl;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestConfig.getPetsGetRepositoryImpl;
 import static com.wisercat.bestfriend.custom_assert.PetDtoAssert.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;

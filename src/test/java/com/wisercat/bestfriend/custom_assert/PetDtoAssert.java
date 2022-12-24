@@ -1,6 +1,6 @@
 package com.wisercat.bestfriend.custom_assert;
 
-import com.wisercat.bestfriend.dto.PetDto;
+import com.wisercat.bestfriend.dto.pet.PetDto;
 import org.assertj.core.api.*;
 
 import java.util.List;

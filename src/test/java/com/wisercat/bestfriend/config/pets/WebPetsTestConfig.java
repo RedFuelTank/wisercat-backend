@@ -1,33 +1,16 @@
-package com.wisercat.bestfriend.config;
+package com.wisercat.bestfriend.config.pets;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wisercat.bestfriend.controller.pets_controller.add_use_case.PetsAddService;
 import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetService;
-import com.wisercat.bestfriend.dto.PetDto;
-import com.wisercat.bestfriend.exception.handler.ExceptionsHandler;
+import com.wisercat.bestfriend.dto.pet.PetDto;
 import com.wisercat.bestfriend.service.pets_service.add_use_case.PetsAddRepository;
 import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetRepository;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import java.util.List;
 import java.util.Optional;
 
-public final class WebTestConfig {
-    private WebTestConfig() {}
-
-    public static MappingJackson2HttpMessageConverter getObjectMapperHttpMessageConverter() {
-        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-        converter.setObjectMapper(getObjectMapper());
-        return converter;
-    }
-
-    public static ObjectMapper getObjectMapper() {
-        return new ObjectMapper();
-    }
-
-    public static Object getExceptionHandler() {
-        return new ExceptionsHandler();
-    }
+public final class WebPetsTestConfig {
+    private WebPetsTestConfig() {}
 
     public static PetsGetService getPetsGetServiceImpl() {
         return new PetsGetService() {

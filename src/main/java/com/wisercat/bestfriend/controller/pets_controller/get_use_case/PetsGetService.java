@@ -1,6 +1,6 @@
 package com.wisercat.bestfriend.controller.pets_controller.get_use_case;
 
-import com.wisercat.bestfriend.dto.PetDto;
+import com.wisercat.bestfriend.dto.pet.PetDto;
 
 import java.util.List;
 

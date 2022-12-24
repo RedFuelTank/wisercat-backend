@@ -1,9 +1,9 @@
 package com.wisercat.bestfriend.database.pets_repository.get_use_case;
 
-import com.wisercat.bestfriend.dto.PetDto;
-import com.wisercat.bestfriend.dto.enums.CountryOrigin;
-import com.wisercat.bestfriend.dto.enums.FurColor;
-import com.wisercat.bestfriend.dto.enums.PetType;
+import com.wisercat.bestfriend.dto.pet.PetDto;
+import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
+import com.wisercat.bestfriend.dto.pet.enums.FurColor;
+import com.wisercat.bestfriend.dto.pet.enums.PetType;
 import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class PetsGetRepositoryImpl implements PetsGetRepository {
+public class MockGetRepository implements PetsGetRepository {
 
     @Override
     public Optional<PetDto> getById(Long id) {

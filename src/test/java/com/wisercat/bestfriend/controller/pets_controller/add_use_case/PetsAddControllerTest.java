@@ -1,10 +1,10 @@
 package com.wisercat.bestfriend.controller.pets_controller.add_use_case;
 
-import com.wisercat.bestfriend.PostRequestBuilder;
-import com.wisercat.bestfriend.dto.PetDto;
-import com.wisercat.bestfriend.dto.enums.CountryOrigin;
-import com.wisercat.bestfriend.dto.enums.FurColor;
-import com.wisercat.bestfriend.dto.enums.PetType;
+import com.wisercat.bestfriend.requestbuilder.pets.PetsPostRequestBuilder;
+import com.wisercat.bestfriend.dto.pet.PetDto;
+import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
+import com.wisercat.bestfriend.dto.pet.enums.FurColor;
+import com.wisercat.bestfriend.dto.pet.enums.PetType;
 import com.wisercat.bestfriend.exception.DataAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.wisercat.bestfriend.config.WebTestConfig.*;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestConfig.*;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class PetsAddControllerTest {
     private PetsAddService service;
-    private PostRequestBuilder requestBuilder;
+    private PetsPostRequestBuilder requestBuilder;
 
     @BeforeEach
     void init() {
@@ -38,7 +39,7 @@ class PetsAddControllerTest {
                 .setControllerAdvice(getExceptionHandler())
                 .setMessageConverters(getObjectMapperHttpMessageConverter())
                 .build();
-        requestBuilder = new PostRequestBuilder(mockMvc);
+        requestBuilder = new PetsPostRequestBuilder(mockMvc);
     }
 
     @Nested

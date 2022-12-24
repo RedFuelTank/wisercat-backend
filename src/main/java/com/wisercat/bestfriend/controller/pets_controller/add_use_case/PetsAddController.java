@@ -1,6 +1,6 @@
 package com.wisercat.bestfriend.controller.pets_controller.add_use_case;
 
-import com.wisercat.bestfriend.dto.PetDto;
+import com.wisercat.bestfriend.dto.pet.PetDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
