@@ -46,7 +46,8 @@ class PetsAddServiceTest {
         @BeforeEach
         void init() {
             insert = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-            output = new PetDto(PET_ID, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+            output = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+            output.setId(PET_ID);
             given(repository.save(insert))
                     .willReturn(output);
         }

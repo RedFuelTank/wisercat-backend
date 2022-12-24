@@ -59,7 +59,8 @@ class PetsAddControllerTest {
         class WhenValidInformationIsProvided {
             @BeforeEach
             void init() {
-                petDto = new PetDto(PET_ID, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                petDto.setId(PET_ID);
                 given(service.save(any())).willReturn(petDto);
             }
 
@@ -208,7 +209,8 @@ class PetsAddControllerTest {
 
             @BeforeEach
             void init() {
-                petDto = new PetDto(PET_ID, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                petDto.setId(PET_ID);
                 given(service.save(any()))
                         .willThrow(new DataAlreadyExistsException(
                                 DATA_ALREADY_EXISTS_EXCEPTION_MESSAGE

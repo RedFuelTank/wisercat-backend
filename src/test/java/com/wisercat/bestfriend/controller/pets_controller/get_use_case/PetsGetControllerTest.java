@@ -57,7 +57,8 @@ class PetsGetControllerTest {
         class dataHasSuccessfullyBeenFound {
             @BeforeEach
             void init() {
-                petDto = new PetDto(PET_ID, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                petDto.setId(PET_ID);
                 given(service.getById(PET_ID)).willReturn(petDto);
             }
 

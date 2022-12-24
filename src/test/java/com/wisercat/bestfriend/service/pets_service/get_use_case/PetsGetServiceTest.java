@@ -46,8 +46,11 @@ class PetsGetServiceTest {
         class SpecificDataExists {
             @BeforeEach
             void init() {
+                PetDto petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                petDto.setId(PET_ID);
+
                 given(repository.getById(PET_ID)).willReturn(Optional.of(
-                        new PetDto(PET_ID, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN)
+                        petDto
                 ));
             }
 
@@ -164,23 +167,26 @@ class PetsGetServiceTest {
 
             @BeforeEach
             void init() {
+                PetDto firstPetDto = new PetDto(
+                        FIRST_PET_CODE,
+                        FIRST_PET_NAME,
+                        FIRST_PET_TYPE,
+                        FIRST_PET_FUR_COLOR,
+                        FIRST_PET_COUNTRY_OF_ORIGIN
+                );
+                firstPetDto.setId(FIRST_PET_ID);
+
+                PetDto secondPetDto = new PetDto(
+                        SECOND_PET_CODE,
+                        SECOND_PET_NAME,
+                        SECOND_PET_TYPE,
+                        SECOND_PET_FUR_COLOR,
+                        SECOND_PET_COUNTRY_OF_ORIGIN
+                );
+                secondPetDto.setId(SECOND_PET_ID);
                 given(repository.getAll()).willReturn(List.of(
-                        new PetDto(
-                                FIRST_PET_ID,
-                                FIRST_PET_CODE,
-                                FIRST_PET_NAME,
-                                FIRST_PET_TYPE,
-                                FIRST_PET_FUR_COLOR,
-                                FIRST_PET_COUNTRY_OF_ORIGIN
-                        ),
-                        new PetDto(
-                                SECOND_PET_ID,
-                                SECOND_PET_CODE,
-                                SECOND_PET_NAME,
-                                SECOND_PET_TYPE,
-                                SECOND_PET_FUR_COLOR,
-                                SECOND_PET_COUNTRY_OF_ORIGIN
-                        )
+                        firstPetDto,
+                        secondPetDto
                 ));
             }
 
