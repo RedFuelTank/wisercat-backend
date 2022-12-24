@@ -21,4 +21,13 @@ public class PetsGetRequestBuilder {
         return mockMvc.perform(get("/pets"));
     }
 
+    public ResultActions getUserPetsByPages(String username, int page, int size) throws Exception {
+        return mockMvc
+                .perform(get("/{username}/pets?page={page}&size={size}", username, page, size));
+    }
+
+    public ResultActions getPetByIdByUsername(String username, Long id) throws Exception {
+        return mockMvc
+                .perform(get("/{username}/pets/{id}", username, id));
+    }
 }

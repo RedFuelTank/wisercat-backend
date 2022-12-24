@@ -8,4 +8,8 @@ public interface PetsGetService {
     PetDto getById(Long id);
 
     List<PetDto> getAll();
+
+    PetDto getPetByIdByUsername(String username, Long id);
+
+    List<PetDto> getUserPetsByPages(String username, int page, int size);
 }

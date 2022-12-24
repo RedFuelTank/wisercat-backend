@@ -16,14 +16,4 @@ public class UserGetRequestBuilder {
         return mockMvc
                 .perform(get("/users/{username}", username));
     }
-
-    public ResultActions getUserPetsByPages(String username, int page, int size) throws Exception {
-        return mockMvc
-                .perform(get("/users/{username}/pets?page={page}&size={size}", username, page, size));
-    }
-
-    public ResultActions getPetByIdByUsername(String username, Long id) throws Exception {
-        return mockMvc
-                .perform(get("/users/{username}/pets/{id}", username, id));
-    }
 }

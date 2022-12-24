@@ -10,7 +10,6 @@ public class PetDtoAssert extends AbstractAssert<PetDtoAssert, PetDto> {
         super(petDto, PetDtoAssert.class);
     }
 
-
     public static PetDtoAssert assertThat(PetDto petDto) {
         return new PetDtoAssert(petDto);
     }
@@ -31,10 +30,6 @@ public class PetDtoAssert extends AbstractAssert<PetDtoAssert, PetDto> {
         return Assertions.assertThat(object);
     }
 
-    @Override
-    public PetDtoAssert isEqualTo(Object expected) {
-        return super.isEqualTo(expected);
-    }
 
     public PetDtoAssert hasName() {
         isNotNull();

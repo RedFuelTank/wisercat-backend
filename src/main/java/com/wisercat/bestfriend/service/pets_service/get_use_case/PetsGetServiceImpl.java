@@ -27,4 +27,14 @@ public class PetsGetServiceImpl implements PetsGetService {
     public List<PetDto> getAll() {
         return repository.getAll();
     }
+
+    @Override
+    public PetDto getPetByIdByUsername(String username, Long id) {
+        return null;
+    }
+
+    @Override
+    public List<PetDto> getUserPetsByPages(String username, int page, int size) {
+        return null;
+    }
 }

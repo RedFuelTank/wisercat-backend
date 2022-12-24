@@ -5,8 +5,11 @@ import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
 import com.wisercat.bestfriend.dto.pet.enums.FurColor;
 import com.wisercat.bestfriend.dto.pet.enums.PetType;
 import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,5 +68,20 @@ public class MockGetRepository implements PetsGetRepository {
                 firstPetDto,
                 secondPetDto
         );
+    }
+
+    @Override
+    public List<PetDto> getAllByOwnerUsername(String username, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Iterable<PetDto> findAll(Sort sort) {
+        return null;
+    }
+
+    @Override
+    public Page<PetDto> findAll(org.springframework.data.domain.Pageable pageable) {
+        return null;
     }
 }
