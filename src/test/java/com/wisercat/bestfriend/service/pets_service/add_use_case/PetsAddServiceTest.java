@@ -11,7 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static com.wisercat.bestfriend.config.pets.WebPetsTestConfig.getPetsAddRepositoryImpl;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.getPetsAddRepositoryImpl;
 import static com.wisercat.bestfriend.custom_assert.PetDtoAssert.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;

@@ -9,8 +9,8 @@ import com.wisercat.bestfriend.service.pets_service.get_use_case.PetsGetReposito
 import java.util.List;
 import java.util.Optional;
 
-public final class WebPetsTestConfig {
-    private WebPetsTestConfig() {}
+public final class WebPetsTestFactory {
+    private WebPetsTestFactory() {}
 
     public static PetsGetService getPetsGetServiceImpl() {
         return new PetsGetService() {

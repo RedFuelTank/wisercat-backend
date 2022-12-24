@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Optional;
 
-import static com.wisercat.bestfriend.config.pets.WebPetsTestConfig.getPetsGetRepositoryImpl;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.getPetsGetRepositoryImpl;
 import static com.wisercat.bestfriend.custom_assert.PetDtoAssert.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;

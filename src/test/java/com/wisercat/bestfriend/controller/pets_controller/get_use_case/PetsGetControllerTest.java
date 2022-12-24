@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
-import static com.wisercat.bestfriend.config.pets.WebPetsTestConfig.*;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.*;
 import static com.wisercat.bestfriend.config.WebTestConfig.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;

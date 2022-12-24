@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.wisercat.bestfriend.config.WebTestConfig.*;
-import static com.wisercat.bestfriend.config.pets.WebPetsTestConfig.*;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.*;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
