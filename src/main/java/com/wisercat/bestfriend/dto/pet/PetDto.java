@@ -1,9 +1,9 @@
 package com.wisercat.bestfriend.dto.pet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
-import com.wisercat.bestfriend.dto.pet.enums.FurColor;
-import com.wisercat.bestfriend.dto.pet.enums.PetType;
+import com.wisercat.bestfriend.enums.CountryOrigin;
+import com.wisercat.bestfriend.enums.FurColor;
+import com.wisercat.bestfriend.enums.PetType;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;

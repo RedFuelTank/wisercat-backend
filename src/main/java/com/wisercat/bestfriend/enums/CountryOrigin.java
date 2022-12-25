@@ -1,4 +1,4 @@
-package com.wisercat.bestfriend.dto.pet.enums;
+package com.wisercat.bestfriend.enums;
 
 public enum CountryOrigin {
     FINLAND, ESTONIA

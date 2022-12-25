@@ -2,32 +2,47 @@ package com.wisercat.bestfriend.service.pets_service.get_use_case;
 
 import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetService;
 import com.wisercat.bestfriend.dto.pet.PetDto;
-import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
-import com.wisercat.bestfriend.dto.pet.enums.FurColor;
-import com.wisercat.bestfriend.dto.pet.enums.PetType;
+import com.wisercat.bestfriend.enums.CountryOrigin;
+import com.wisercat.bestfriend.enums.FurColor;
+import com.wisercat.bestfriend.enums.PetType;
 import com.wisercat.bestfriend.exception.NotFoundException;
+import com.wisercat.bestfriend.model.Pet;
+import com.wisercat.bestfriend.service.mapper.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.getPetsGetRepositoryImpl;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.getPetMapperImpl;
 import static com.wisercat.bestfriend.custom_assert.PetDtoAssert.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.getPetsGetRepositoryImpl;
+import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 
 class PetsGetServiceTest {
     private PetsGetRepository repository;
+    private Mapper<PetDto, Pet> mapper;
+
     private PetsGetService service;
 
     @BeforeEach
     void init() {
         repository = mock(getPetsGetRepositoryImpl().getClass());
-        service = new PetsGetServiceImpl(repository);
+        mapper = mock(getPetMapperImpl().getClass());
+        service = new PetsGetServiceImpl(repository, mapper);
     }
 
     @Nested
@@ -35,6 +50,7 @@ class PetsGetServiceTest {
     class FindById {
 
         private final static Long PET_ID = 1L;
+        private final static String PET_OWNER_NAME = "user";
         private final static String PET_NAME = "Fluffy";
         private final static String PET_CODE = "7ebf40ac-146b-4c1f-a07f-64e2d21f215f";
         private final static PetType PET_TYPE = PetType.CAT;
@@ -46,12 +62,11 @@ class PetsGetServiceTest {
         class SpecificDataExists {
             @BeforeEach
             void init() {
-                PetDto petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-                petDto.setId(PET_ID);
+                Pet pet = new Pet(PET_ID, PET_OWNER_NAME, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                PetDto petDto = new PetDto(PET_ID, PET_OWNER_NAME, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
 
-                given(repository.getById(PET_ID)).willReturn(Optional.of(
-                        petDto
-                ));
+                given(repository.getById(PET_ID)).willReturn(Optional.of(pet));
+                given(mapper.toDto(pet)).willReturn(petDto);
             }
 
             @Test
@@ -67,6 +82,7 @@ class PetsGetServiceTest {
                 PetDto petDto = service.getById(PET_ID);
                 assertThat(petDto)
                         .hasId()
+                        .hasOwner()
                         .hasCode()
                         .hasName()
                         .hasPetType()
@@ -81,6 +97,9 @@ class PetsGetServiceTest {
                 assertThat(petDto.getId())
                         .as("Check PetDto id")
                         .isEqualTo(PET_ID);
+                assertThat(petDto.getOwnerUsername())
+                        .as("Check PetDto owner's username")
+                        .isEqualTo(PET_OWNER_NAME);
                 assertThat(petDto.getCode())
                         .as("Check PetDto code")
                         .isEqualTo(PET_CODE);
@@ -110,6 +129,7 @@ class PetsGetServiceTest {
             @BeforeEach
             void init() {
                 given(repository.getById(PET_ID)).willReturn(Optional.empty());
+                given(mapper.toDto(any())).willReturn(any());
             }
 
             @Test
@@ -130,20 +150,22 @@ class PetsGetServiceTest {
         class NoOnePetsDataExistsDatabase {
             @BeforeEach
             void init() {
-                given(repository.getAll()).willReturn(List.of());
+                Page<Pet> pets = new PageImpl<Pet>(List.of());
+                given(repository.findAll(any(Pageable.class)))
+                        .willReturn(pets);
             }
 
             @Test
             @DisplayName("Should return non-null value")
             void shouldReturnNonNullValue() {
-                assertThat(service.getAll())
+                assertThat(service.getAll(any(Pageable.class)))
                         .isNotNull();
             }
 
             @Test
             @DisplayName("Should return empty list")
             void shouldReturnEmptyList() {
-                assertThat(service.getAll())
+                assertThat(service.getAll(any(PageRequest.class)))
                         .hasSize(0);
             }
         }
@@ -152,6 +174,7 @@ class PetsGetServiceTest {
         @DisplayName("When two pets data exist in database")
         class TwoPetsDataExistDatabase {
             private final static Long FIRST_PET_ID = 0L;
+            private final static String FIRST_PET_OWNER_NAME = "user";
             private final static String FIRST_PET_NAME = "Fluffy";
             private final static String FIRST_PET_CODE = "7ebf40ac-146b-4c1f-a07f-64e2d21f215f";
             private final static PetType FIRST_PET_TYPE = PetType.CAT;
@@ -159,6 +182,7 @@ class PetsGetServiceTest {
             private final static CountryOrigin FIRST_PET_COUNTRY_OF_ORIGIN = CountryOrigin.ESTONIA;
 
             private final static Long SECOND_PET_ID = 1L;
+            private final static String SECOND_PET_OWNER_NAME = "admin";
             private final static String SECOND_PET_NAME = "Bunny";
             private final static String SECOND_PET_CODE = "40ec994c-84e5-476d-96fa-ac87525a0af6";
             private final static PetType SECOND_PET_TYPE = PetType.RABBIT;
@@ -167,47 +191,50 @@ class PetsGetServiceTest {
 
             @BeforeEach
             void init() {
-                PetDto firstPetDto = new PetDto(
+                Page<Pet> pets = mock(Page.class);
+
+                Pet firstPet = new Pet(
+                        FIRST_PET_ID,
+                        FIRST_PET_OWNER_NAME,
                         FIRST_PET_CODE,
                         FIRST_PET_NAME,
                         FIRST_PET_TYPE,
                         FIRST_PET_FUR_COLOR,
                         FIRST_PET_COUNTRY_OF_ORIGIN
                 );
-                firstPetDto.setId(FIRST_PET_ID);
 
-                PetDto secondPetDto = new PetDto(
+                Pet secondPet = new Pet(
+                        SECOND_PET_ID,
+                        SECOND_PET_OWNER_NAME,
                         SECOND_PET_CODE,
                         SECOND_PET_NAME,
                         SECOND_PET_TYPE,
                         SECOND_PET_FUR_COLOR,
                         SECOND_PET_COUNTRY_OF_ORIGIN
                 );
-                secondPetDto.setId(SECOND_PET_ID);
-                given(repository.getAll()).willReturn(List.of(
-                        firstPetDto,
-                        secondPetDto
-                ));
+                pets.getContent().add(firstPet);
+                pets.getContent().add(secondPet);
+                given(repository.findAll(any(PageRequest.class))).willReturn(pets);
             }
 
             @Test
             @DisplayName("Should return non-null value")
             void shouldReturnNonNullValue() {
-                assertThat(service.getAll())
+                assertThat(service.getAll(any(PageRequest.class)))
                         .isNotNull();
             }
 
             @Test
             @DisplayName("Should return two pets data")
             void shouldReturnTwoPetsData() {
-                assertThat(service.getAll())
+                assertThat(service.getAll(any(PageRequest.class)))
                         .hasSize(2);
             }
 
             @Test
             @DisplayName("Should return correct data of both pets")
             void shouldReturnNonNullDataTwoPets() {
-                assertThat(service.getAll()).allSatisfy(petDto -> {
+                assertThat(service.getAll(any(PageRequest.class))).allSatisfy(petDto -> {
                     assertThat(petDto).isNotNull();
                 });
             }

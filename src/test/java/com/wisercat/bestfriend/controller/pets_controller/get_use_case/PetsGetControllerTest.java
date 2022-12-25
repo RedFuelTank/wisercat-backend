@@ -3,14 +3,16 @@ package com.wisercat.bestfriend.controller.pets_controller.get_use_case;
 import com.wisercat.bestfriend.exception.InvalidParameterException;
 import com.wisercat.bestfriend.requestbuilder.pets.PetsGetRequestBuilder;
 import com.wisercat.bestfriend.dto.pet.PetDto;
-import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
-import com.wisercat.bestfriend.dto.pet.enums.FurColor;
-import com.wisercat.bestfriend.dto.pet.enums.PetType;
+import com.wisercat.bestfriend.enums.CountryOrigin;
+import com.wisercat.bestfriend.enums.FurColor;
+import com.wisercat.bestfriend.enums.PetType;
 import com.wisercat.bestfriend.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -21,9 +23,12 @@ import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.*;
 import static com.wisercat.bestfriend.config.WebTestConfig.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 class PetsGetControllerTest {
 
     private PetsGetRequestBuilder requestBuilder;
@@ -36,6 +41,7 @@ class PetsGetControllerTest {
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setMessageConverters(getObjectMapperHttpMessageConverter())
                 .setControllerAdvice(getExceptionHandler())
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
                 .build();
         requestBuilder = new PetsGetRequestBuilder(mockMvc);
     }
@@ -150,7 +156,7 @@ class PetsGetControllerTest {
         class ReturnListNoData {
             @BeforeEach
             void init() {
-                given(service.getAll()).willReturn(List.of());
+                given(service.getAll(any(PageRequest.class))).willReturn(List.of());
             }
 
             @Test
@@ -197,7 +203,8 @@ class PetsGetControllerTest {
                 );
                 secondPetDto.setId(SECOND_PET_ID);
 
-                given(service.getAll()).willReturn(List.of(firstPetDto, secondPetDto));
+                given(service.getAll(any(PageRequest.class)))
+                        .willReturn(List.of(firstPetDto, secondPetDto));
             }
 
             @Test
@@ -368,7 +375,7 @@ class PetsGetControllerTest {
                             SECOND_PET_FUR_COLOR,
                             SECOND_PET_COUNTRY_OF_ORIGIN
                     );
-                    given(service.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER_ONE, PAGE_SIZE))
+                    given(service.getUserPetsByPages(anyString(), any(PageRequest.class)))
                             .willReturn(List.of(
                                     firstPetDto,
                                     secondPetDto
@@ -421,78 +428,78 @@ class PetsGetControllerTest {
             }
 
         }
-        @Nested
-        @DisplayName("When parameters are not valid")
-        class InvalidParameters {
-            private final static int PAGE_NUMBER = 1;
-
-            @Nested
-            @DisplayName("When page number is incorrect")
-            class PageNumberIncorrect {
-                private final static int INCORRECT_PAGE_NUMBER = 0;
-
-                private final static String INVALID_PAGE_NUMBER_EXCEPTION_MESSAGE =
-                        String.format("Page number (%s) is unacceptable value", INCORRECT_PAGE_NUMBER);
-
-                @Test
-                @DisplayName("Should return HTTP response code 400 (incorrect page number)")
-                void shouldReturnHttpResponseCodeBadRequestPageNumber() throws Exception {
-                    requestBuilder.getUserPetsByPages(USER_USERNAME, INCORRECT_PAGE_NUMBER, PAGE_SIZE)
-                            .andExpect(status().isBadRequest());
-                }
-
-                @Test
-                @DisplayName("Should return HTTP response with JSON media-type")
-                void shouldReturnHttpResponseJsonMediaType() throws Exception {
-                    requestBuilder.getUserPetsByPages(USER_USERNAME, INCORRECT_PAGE_NUMBER, PAGE_SIZE)
-                            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-                }
-
-                @Test
-                @DisplayName("Should return HTTP response body with correct exception message")
-                void shouldReturnHttpResponseBodyException() throws Exception {
-                    requestBuilder.getUserPetsByPages(USER_USERNAME, INCORRECT_PAGE_NUMBER, PAGE_SIZE)
-                            .andExpect(jsonPath("$.name", equalTo(InvalidParameterException.class.getSimpleName())))
-                            .andExpect(jsonPath("$.message", equalTo(INVALID_PAGE_NUMBER_EXCEPTION_MESSAGE)));
-                }
-
-
-            }
-
-            @Nested
-            @DisplayName("When page size is incorrect")
-            class PageSizeIncorrect {
-                private final static int INCORRECT_PAGE_SIZE = 0;
-
-                private final static String INVALID_PAGE_SIZE_EXCEPTION_MESSAGE =
-                        String.format("Page size (%s) is unacceptable value", INCORRECT_PAGE_SIZE);
-
-                @Test
-                @DisplayName("Should return HTTP response code 400 (incorrect page number)")
-                void shouldReturnHttpResponseCodeBadRequestPageNumber() throws Exception {
-                    requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER, INCORRECT_PAGE_SIZE)
-                            .andExpect(status().isBadRequest());
-                }
-
-                @Test
-                @DisplayName("Should return HTTP response with JSON media-type")
-                void shouldReturnHttpResponseJsonMediaType() throws Exception {
-                    requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER, INCORRECT_PAGE_SIZE)
-                            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-                }
-
-                @Test
-                @DisplayName("Should return HTTP response body with correct exception message")
-                void shouldReturnHttpResponseBodyException() throws Exception {
-                    requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER, INCORRECT_PAGE_SIZE)
-                            .andExpect(jsonPath("$.name", equalTo(InvalidParameterException.class.getSimpleName())))
-                            .andExpect(jsonPath("$.message", equalTo(INVALID_PAGE_SIZE_EXCEPTION_MESSAGE)));
-                }
-
-
-            }
-
-        }
+//        @Nested
+//        @DisplayName("When parameters are not valid")
+//        class InvalidParameters {
+//            private final static int PAGE_NUMBER = 1;
+//
+//            @Nested
+//            @DisplayName("When page number is incorrect")
+//            class PageNumberIncorrect {
+//                private final static int INCORRECT_PAGE_NUMBER = 0;
+//
+//                private final static String INVALID_PAGE_NUMBER_EXCEPTION_MESSAGE =
+//                        String.format("Page number (%s) is unacceptable value", INCORRECT_PAGE_NUMBER);
+//
+//                @Test
+//                @DisplayName("Should return HTTP response code 400 (incorrect page number)")
+//                void shouldReturnHttpResponseCodeBadRequestPageNumber() throws Exception {
+//                    requestBuilder.getUserPetsByPages(USER_USERNAME, INCORRECT_PAGE_NUMBER, PAGE_SIZE)
+//                            .andExpect(status().isBadRequest());
+//                }
+//
+//                @Test
+//                @DisplayName("Should return HTTP response with JSON media-type")
+//                void shouldReturnHttpResponseJsonMediaType() throws Exception {
+//                    requestBuilder.getUserPetsByPages(USER_USERNAME, INCORRECT_PAGE_NUMBER, PAGE_SIZE)
+//                            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+//                }
+//
+//                @Test
+//                @DisplayName("Should return HTTP response body with correct exception message")
+//                void shouldReturnHttpResponseBodyException() throws Exception {
+//                    requestBuilder.getUserPetsByPages(USER_USERNAME, INCORRECT_PAGE_NUMBER, PAGE_SIZE)
+//                            .andExpect(jsonPath("$.name", equalTo(InvalidParameterException.class.getSimpleName())))
+//                            .andExpect(jsonPath("$.message", equalTo(INVALID_PAGE_NUMBER_EXCEPTION_MESSAGE)));
+//                }
+//
+//
+//            }
+//
+//            @Nested
+//            @DisplayName("When page size is incorrect")
+//            class PageSizeIncorrect {
+//                private final static int INCORRECT_PAGE_SIZE = 0;
+//
+//                private final static String INVALID_PAGE_SIZE_EXCEPTION_MESSAGE =
+//                        String.format("Page size (%s) is unacceptable value", INCORRECT_PAGE_SIZE);
+//
+//                @Test
+//                @DisplayName("Should return HTTP response code 400 (incorrect page number)")
+//                void shouldReturnHttpResponseCodeBadRequestPageNumber() throws Exception {
+//                    requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER, INCORRECT_PAGE_SIZE)
+//                            .andExpect(status().isBadRequest());
+//                }
+//
+//                @Test
+//                @DisplayName("Should return HTTP response with JSON media-type")
+//                void shouldReturnHttpResponseJsonMediaType() throws Exception {
+//                    requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER, INCORRECT_PAGE_SIZE)
+//                            .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+//                }
+//
+//                @Test
+//                @DisplayName("Should return HTTP response body with correct exception message")
+//                void shouldReturnHttpResponseBodyException() throws Exception {
+//                    requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER, INCORRECT_PAGE_SIZE)
+//                            .andExpect(jsonPath("$.name", equalTo(InvalidParameterException.class.getSimpleName())))
+//                            .andExpect(jsonPath("$.message", equalTo(INVALID_PAGE_SIZE_EXCEPTION_MESSAGE)));
+//                }
+//
+//
+//            }
+//
+//        }
     }
 
 }

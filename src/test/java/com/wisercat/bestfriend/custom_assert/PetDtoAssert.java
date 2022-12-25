@@ -41,6 +41,16 @@ public class PetDtoAssert extends AbstractAssert<PetDtoAssert, PetDto> {
         return this;
     }
 
+    public PetDtoAssert hasOwner() {
+        isNotNull();
+        if (actual.getOwnerUsername() == null) {
+            failWithMessage(
+                    "Expected pet dto to have owner's username, but it was null"
+            );
+        }
+        return this;
+    }
+
     public PetDtoAssert hasId() {
         isNotNull();
         if (actual.getId() == null) {

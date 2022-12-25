@@ -4,7 +4,9 @@ import com.wisercat.bestfriend.controller.user_controller.get_use_case.UserGetSe
 import com.wisercat.bestfriend.dto.user.UserDto;
 import com.wisercat.bestfriend.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @RequiredArgsConstructor
 public class UserGetServiceImpl implements UserGetService {
     private final UserGetRepository repository;

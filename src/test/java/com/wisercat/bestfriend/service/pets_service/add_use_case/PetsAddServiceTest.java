@@ -2,9 +2,9 @@ package com.wisercat.bestfriend.service.pets_service.add_use_case;
 
 import com.wisercat.bestfriend.controller.pets_controller.add_use_case.PetsAddService;
 import com.wisercat.bestfriend.dto.pet.PetDto;
-import com.wisercat.bestfriend.dto.pet.enums.CountryOrigin;
-import com.wisercat.bestfriend.dto.pet.enums.FurColor;
-import com.wisercat.bestfriend.dto.pet.enums.PetType;
+import com.wisercat.bestfriend.enums.CountryOrigin;
+import com.wisercat.bestfriend.enums.FurColor;
+import com.wisercat.bestfriend.enums.PetType;
 import com.wisercat.bestfriend.exception.DataAlreadyExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
