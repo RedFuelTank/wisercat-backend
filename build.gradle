@@ -15,6 +15,8 @@ configurations {
 }
 
 def jjwtVersion = '0.11.5'
+def springBootConfigurationProcessorVersion = '3.0.1'
+def hamcrestVersion = "2.2"
 
 repositories {
     mavenCentral()
@@ -31,15 +33,17 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
 
     annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:3.0.1'
+
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:$springBootConfigurationProcessorVersion"
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.hsqldb:hsqldb'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     implementation 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation "org.hamcrest:hamcrest-library:2.2"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    testImplementation "org.hamcrest:hamcrest-library:" + hamcrestVersion
 
 }
 
