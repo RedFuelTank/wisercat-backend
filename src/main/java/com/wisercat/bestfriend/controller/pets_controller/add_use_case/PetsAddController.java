@@ -14,7 +14,7 @@ public class PetsAddController {
     private final PetsAddService service;
     @PostMapping("{username}/pets")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("#username == authentication.name")
+    @PreAuthorize("#username == authentication.name or hasRole('ROLE_ADMIN')")
     public PetDto save(@RequestBody @Valid RegistrationPetDto petDto, @PathVariable String username) {
         return service.save(petDto, username);
     }
