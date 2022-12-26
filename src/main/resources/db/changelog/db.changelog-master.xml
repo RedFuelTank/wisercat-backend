@@ -6,10 +6,24 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
-    <changeSet id="V1__CREATE_USER_TABLE" author="bob">
+    <changeSet id="V1__CREATE_USER_TABLE" author="">
         <createTable tableName="users">
             <column name="username" type="varchar(255)">
                 <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createTable tableName="authorities">
+            <column name="username" type="varchar(50)">
+                <constraints nullable="false" foreignKeyName="fk_authority_username" references="users(username)" deleteCascade="true"/>
+            </column>
+            <column name="authority" type="varchar(50)">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -35,8 +49,32 @@
                 <constraints nullable="false"/>
             </column>
             <column name="owner_username" type="varchar(255)">
-                <constraints foreignKeyName="fk_username" references="users(username)"/>
+                <constraints foreignKeyName="fk_username" references="users(username)" deleteCascade="true"/>
             </column>
         </createTable>
+    </changeSet>
+
+    <changeSet id="V3__ADD_USER" author="">
+        <insert tableName="Users">
+            <column name="username" value="user"/>
+            <column name="password" value="$2a$10$rDhr28yT2X26mqQVytCJUOti9k6Ry16i3HSWM.vLZ8zMQQl1SqyO2"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="Authorities">
+            <column name="username" value="user"/>
+            <column name="authority" value="ROLE_USER"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="V4__ADD_ADMIN" author="">
+        <insert tableName="Users">
+            <column name="username" value="admin"/>
+            <column name="password" value="$2a$10$piVu2FK65CZJz8GqgFVjxuer8N9dlxpP9kgKr9uiN6eD8hKE4Amhi"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="Authorities">
+            <column name="username" value="admin"/>
+            <column name="authority" value="ROLE_ADMIN"/>
+        </insert>
     </changeSet>
 </databaseChangeLog>
