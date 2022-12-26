@@ -4,7 +4,6 @@ import com.wisercat.bestfriend.dto.pet.PetDto;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface PetsGetService {
     PetDto getById(Long id);

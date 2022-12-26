@@ -2,6 +2,13 @@ server:
   servlet:
     context-path: "/api"
 
+app:
+  users:
+    user-name: user
+    user-password: user
+    admin-name: admin
+    admin-password: admin
+
 spring:
   jpa:
     properties:
@@ -20,3 +27,6 @@ spring:
   liquibase:
     clear-checksums: true
     change-log: classpath:db/changelog/db.changelog-master.xml
+jwt:
+  key: r6m4GNX6voKiPh5pfCaWkQoG8d1E756ioKiPh2pfCaWk59ioKiPh2h5pfCaWkQoG8d1E756io
+  duration-min: 15
