@@ -1,0 +1,22 @@
+server:
+  servlet:
+    context-path: "/api"
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.HSQLDialect
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:hsqldb:hsql://localhost/db1
+    username: sa
+    password:
+    driver-class-name: org.hsqldb.jdbcDriver
+  h2:
+    console:
+      enabled: true
+  liquibase:
+    clear-checksums: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
