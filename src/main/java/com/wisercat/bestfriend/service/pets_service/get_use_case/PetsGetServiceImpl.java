@@ -5,12 +5,11 @@ import com.wisercat.bestfriend.dto.pet.PetDto;
 import com.wisercat.bestfriend.exception.NotFoundException;
 import com.wisercat.bestfriend.model.Pet;
 import com.wisercat.bestfriend.service.mapper.Mapper;
-import com.wisercat.bestfriend.service.mapper.pet.PetMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -33,15 +32,21 @@ public class PetsGetServiceImpl implements PetsGetService {
     }
 
     @Override
-    public List<PetDto> getAll(Pageable pageable) {
-        return repository.findAll(pageable).getContent()
-                .stream().map(mapper::toDto).toList();
+    public Page<PetDto> getAll(Pageable pageable) {
+        Page<Pet> pets = repository.findAll(pageable);
+
+        return new PageImpl<>(pets.getContent().stream().map(mapper::toDto).toList(),
+                pageable,
+                pets.getTotalElements());
     }
 
     @Override
-    public List<PetDto> getUserPetsByPages(String username, Pageable pageable) {
-        return repository.getAllByOwnerUsername(username, pageable)
-                .stream().map(mapper::toDto).toList();
+    public Page<PetDto> getUserPetsByPages(String username, Pageable pageable) {
+        Page<Pet> pets = repository.getAllByOwnerUsername(username, pageable);
+
+        return new PageImpl<>(pets.getContent().stream().map(mapper::toDto).toList(),
+                pageable,
+                pets.getTotalElements());
     }
 }
 

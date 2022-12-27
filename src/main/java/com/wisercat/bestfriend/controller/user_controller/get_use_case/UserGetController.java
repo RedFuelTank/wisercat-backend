@@ -2,6 +2,7 @@ package com.wisercat.bestfriend.controller.user_controller.get_use_case;
 
 import com.wisercat.bestfriend.dto.user.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +15,7 @@ public class UserGetController {
     private final UserGetService service;
 
     @GetMapping("/{username}")
-    public UserDto getUserByUsername(@PathVariable String username) {
+    public UserDto getUserByUsername(@PathVariable String username, Authentication auth) {
         return service.getUserByUsername(username);
     }
-
 }
