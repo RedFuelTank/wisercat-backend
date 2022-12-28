@@ -5,10 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,7 +15,7 @@ public class PetsEditController {
     @PutMapping("/{username}/pets")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("#petDto.ownerUsername == authentication.name or hasRole('ROLE_ADMIN')")
-    public PetDto edit(@RequestBody @Valid PetDto petDto) {
+    public PetDto edit(@RequestBody @Valid PetDto petDto, @PathVariable String username) {
         return service.edit(petDto);
     }
 
