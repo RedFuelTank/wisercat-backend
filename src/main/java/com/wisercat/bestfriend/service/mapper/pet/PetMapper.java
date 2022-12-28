@@ -19,7 +19,7 @@ public class PetMapper implements Mapper<PetDto, Pet> {
                 pet.getOwner().getUsername(),
                 pet.getCode(),
                 pet.getName(),
-                pet.getPetType(),
+                pet.getType(),
                 pet.getFurColor(),
                 pet.getCountryOrigin()
         );

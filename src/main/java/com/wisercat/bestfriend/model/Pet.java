@@ -31,7 +31,7 @@ public class Pet {
     @NonNull
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private PetType petType;
+    private PetType type;
     @NonNull
     @Enumerated(EnumType.STRING)
     @Column(name = "fur_color")
