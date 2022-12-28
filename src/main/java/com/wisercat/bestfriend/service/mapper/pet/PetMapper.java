@@ -1,6 +1,7 @@
 package com.wisercat.bestfriend.service.mapper.pet;
 
 import com.wisercat.bestfriend.dto.pet.PetDto;
+import com.wisercat.bestfriend.exception.NotFoundException;
 import com.wisercat.bestfriend.model.Pet;
 import com.wisercat.bestfriend.model.User;
 import com.wisercat.bestfriend.service.mapper.Mapper;
@@ -28,6 +29,12 @@ public class PetMapper implements Mapper<PetDto, Pet> {
     @Override
     public Pet toEntity(PetDto petDto) {
         User user = manager.find(User.class, petDto.getOwnerUsername());
+
+        if (user == null) {
+            throw new NotFoundException(
+                    String.format("User with username (%s) doesn't exist", petDto.getOwnerUsername()));
+        }
+
         return new Pet(
                 petDto.getId(),
                 user,
