@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
@@ -51,6 +53,7 @@ class PetsGetControllerTest {
     class GetById {
         private final static Long PET_ID = 1L;
         private final static String PET_NAME = "Fluffy";
+        private final static String PET_OWNER_NAME = "user";
         private final static String PET_CODE = "7ebf40ac-146b-4c1f-a07f-64e2d21f215f";
         private final static PetType PET_TYPE = PetType.CAT;
         private final static FurColor PET_FUR_COLOR = FurColor.BLACK;
@@ -64,8 +67,7 @@ class PetsGetControllerTest {
         class dataHasSuccessfullyBeenFound {
             @BeforeEach
             void init() {
-                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-                petDto.setId(PET_ID);
+                petDto = new PetDto(PET_ID, PET_OWNER_NAME,PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
                 given(service.getById(PET_ID)).willReturn(petDto);
             }
 
@@ -137,33 +139,33 @@ class PetsGetControllerTest {
     @DisplayName("Display data of every pet")
     class GetAll {
 
-        @Test
-        @DisplayName("Should return the HTTP status 200")
-        void shouldReturnHttpStatusOk() throws Exception {
-            requestBuilder.getAll()
-                    .andExpect(status().isOk());
-        }
-
-        @Test
-        @DisplayName("Should return HTTP response with JSON media-type")
-        void shouldReturnCorrectMethodType() throws Exception {
-            requestBuilder.getAll()
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        }
-
         @Nested
         @DisplayName("Should return list with no pets data")
         class ReturnListNoData {
             @BeforeEach
             void init() {
-                given(service.getAll(any(PageRequest.class))).willReturn(List.of());
+                Page<PetDto> page = new PageImpl<>(List.of());
+                given(service.getAll(any(PageRequest.class))).willReturn(page);
+            }
+            @Test
+            @DisplayName("Should return the HTTP status 200")
+            void shouldReturnHttpStatusOk() throws Exception {
+                requestBuilder.getAll()
+                        .andExpect(status().isOk());
+            }
+
+            @Test
+            @DisplayName("Should return HTTP response with JSON media-type")
+            void shouldReturnCorrectMethodType() throws Exception {
+                requestBuilder.getAll()
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
             }
 
             @Test
             @DisplayName("Should return empty list")
             void shouldReturnEmptyList() throws Exception {
                 requestBuilder.getAll()
-                        .andExpect(jsonPath("$", hasSize(0)));
+                        .andExpect(jsonPath("$.content", hasSize(0)));
             }
         }
 
@@ -172,6 +174,7 @@ class PetsGetControllerTest {
         class ReturnListTwoPetsData {
             private static final Long FIRST_PET_ID = 0L;
             private final static String FIRST_PET_NAME = "Fluffy";
+            private final static String FIRST_PET_OWNER_NAME = "user";
             private final static String FIRST_PET_CODE = "7ebf40ac-146b-4c1f-a07f-64e2d21f215f";
             private final static PetType FIRST_PET_TYPE = PetType.CAT;
             private final static FurColor FIRST_PET_FUR_COLOR = FurColor.BLACK;
@@ -179,6 +182,7 @@ class PetsGetControllerTest {
 
             private final static Long SECOND_PET_ID = 1L;
             private final static String SECOND_PET_NAME = "Bunny";
+            private final static String SECOND_PET_OWNER_NAME = "admin";
             private final static String SECOND_PET_CODE = "40ec994c-84e5-476d-96fa-ac87525a0af6";
             private final static PetType SECOND_PET_TYPE = PetType.RABBIT;
             private final static FurColor SECOND_PET_FUR_COLOR = FurColor.BROWN;
@@ -187,48 +191,66 @@ class PetsGetControllerTest {
             @BeforeEach
             void init() {
                 PetDto firstPetDto = new PetDto(
+                        FIRST_PET_ID,
+                        FIRST_PET_OWNER_NAME,
                         FIRST_PET_CODE,
                         FIRST_PET_NAME,
                         FIRST_PET_TYPE,
                         FIRST_PET_FUR_COLOR,
                         FIRST_PET_COUNTRY_OF_ORIGIN);
-                firstPetDto.setId(FIRST_PET_ID);
 
                 PetDto secondPetDto = new PetDto(
+                        SECOND_PET_ID,
+                        SECOND_PET_OWNER_NAME,
                         SECOND_PET_CODE,
                         SECOND_PET_NAME,
                         SECOND_PET_TYPE,
                         SECOND_PET_FUR_COLOR,
                         SECOND_PET_COUNTRY_OF_ORIGIN
                 );
-                secondPetDto.setId(SECOND_PET_ID);
+
+                Page<PetDto> page = new PageImpl<>(List.of(firstPetDto, secondPetDto));
 
                 given(service.getAll(any(PageRequest.class)))
-                        .willReturn(List.of(firstPetDto, secondPetDto));
+                        .willReturn(page);
+            }
+
+            @Test
+            @DisplayName("Should return the HTTP status 200")
+            void shouldReturnHttpStatusOk() throws Exception {
+                requestBuilder.getAll()
+                        .andExpect(status().isOk());
+            }
+
+            @Test
+            @DisplayName("Should return HTTP response with JSON media-type")
+            void shouldReturnCorrectMethodType() throws Exception {
+                requestBuilder.getAll()
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
             }
 
             @Test
             @DisplayName("Should return correct data of first pet")
             void shouldReturnCorrectDataFirstPet() throws Exception {
                 requestBuilder.getAll()
-                        .andExpect(jsonPath("$[0].id", equalTo(FIRST_PET_ID.intValue())))
-                        .andExpect(jsonPath("$[0].name", equalTo(FIRST_PET_NAME)))
-                        .andExpect(jsonPath("$[0].code", equalTo(FIRST_PET_CODE)))
-                        .andExpect(jsonPath("$[0].type", equalTo(FIRST_PET_TYPE.toString())))
-                        .andExpect(jsonPath("$[0].furColor", equalTo(FIRST_PET_FUR_COLOR.toString())))
-                        .andExpect(jsonPath("$[0].countryOrigin", equalTo(FIRST_PET_COUNTRY_OF_ORIGIN.toString())));
+                        .andExpect(jsonPath("$.content[0].id", equalTo(FIRST_PET_ID.intValue())))
+                        .andExpect(jsonPath("$.content[0].name", equalTo(FIRST_PET_NAME)))
+                        .andExpect(jsonPath("$.content[0].code", equalTo(FIRST_PET_CODE)))
+                        .andExpect(jsonPath("$.content[0].type", equalTo(FIRST_PET_TYPE.toString())))
+                        .andExpect(jsonPath("$.content[0].furColor", equalTo(FIRST_PET_FUR_COLOR.toString())))
+                        .andExpect(jsonPath("$.content[0].countryOrigin", equalTo(FIRST_PET_COUNTRY_OF_ORIGIN.toString())));
             }
 
             @Test
             @DisplayName("Should return correct data of second pet")
             void shouldReturnCorrectDataSecondPet() throws Exception {
                 requestBuilder.getAll()
-                        .andExpect(jsonPath("$[1].id", equalTo(SECOND_PET_ID.intValue())))
-                        .andExpect(jsonPath("$[1].name", equalTo(SECOND_PET_NAME)))
-                        .andExpect(jsonPath("$[1].code", equalTo(SECOND_PET_CODE)))
-                        .andExpect(jsonPath("$[1].type", equalTo(SECOND_PET_TYPE.toString())))
-                        .andExpect(jsonPath("$[1].furColor", equalTo(SECOND_PET_FUR_COLOR.toString())))
-                        .andExpect(jsonPath("$[1].countryOrigin", equalTo(SECOND_PET_COUNTRY_OF_ORIGIN.toString())));
+                        .andExpect(jsonPath("$.content[1].id", equalTo(SECOND_PET_ID.intValue())))
+                        .andExpect(jsonPath("$.content[1].name", equalTo(SECOND_PET_NAME)))
+                        .andExpect(jsonPath("$.content[1].code", equalTo(SECOND_PET_CODE)))
+                        .andExpect(jsonPath("$.content[1].type", equalTo(SECOND_PET_TYPE.toString())))
+                        .andExpect(jsonPath("$.content[1].furColor", equalTo(SECOND_PET_FUR_COLOR.toString())))
+                        .andExpect(jsonPath("$.content[1].countryOrigin", equalTo(SECOND_PET_COUNTRY_OF_ORIGIN.toString())));
             }
         }
 
@@ -375,11 +397,10 @@ class PetsGetControllerTest {
                             SECOND_PET_FUR_COLOR,
                             SECOND_PET_COUNTRY_OF_ORIGIN
                     );
+                    Page<PetDto> page = new PageImpl<>(List.of(firstPetDto, secondPetDto));
+
                     given(service.getUserPetsByPages(anyString(), any(PageRequest.class)))
-                            .willReturn(List.of(
-                                    firstPetDto,
-                                    secondPetDto
-                            ));
+                            .willReturn(page);
                 }
 
                 @Test
@@ -400,24 +421,24 @@ class PetsGetControllerTest {
                 @DisplayName("Should return correct data of first pet")
                 void shouldReturnHttpResponseCorrectBody() throws Exception {
                     requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER_ONE, PAGE_SIZE)
-                            .andExpect(jsonPath("$[0].id", equalTo(FIRST_PET_ID.intValue())))
-                            .andExpect(jsonPath("$[0].name", equalTo(FIRST_PET_NAME)))
-                            .andExpect(jsonPath("$[0].code", equalTo(FIRST_PET_CODE)))
-                            .andExpect(jsonPath("$[0].type", equalTo(FIRST_PET_TYPE.toString())))
-                            .andExpect(jsonPath("$[0].furColor", equalTo(FIRST_PET_FUR_COLOR.toString())))
-                            .andExpect(jsonPath("$[0].countryOrigin", equalTo(FIRST_PET_COUNTRY_OF_ORIGIN.toString())));
+                            .andExpect(jsonPath("$.content[0].id", equalTo(FIRST_PET_ID.intValue())))
+                            .andExpect(jsonPath("$.content[0].name", equalTo(FIRST_PET_NAME)))
+                            .andExpect(jsonPath("$.content[0].code", equalTo(FIRST_PET_CODE)))
+                            .andExpect(jsonPath("$.content[0].type", equalTo(FIRST_PET_TYPE.toString())))
+                            .andExpect(jsonPath("$.content[0].furColor", equalTo(FIRST_PET_FUR_COLOR.toString())))
+                            .andExpect(jsonPath("$.content[0].countryOrigin", equalTo(FIRST_PET_COUNTRY_OF_ORIGIN.toString())));
                 }
 
                 @Test
                 @DisplayName("Should return correct data of second pet")
                 void shouldReturnCorrectDataSecondPet() throws Exception {
                     requestBuilder.getUserPetsByPages(USER_USERNAME, PAGE_NUMBER_ONE, PAGE_SIZE)
-                            .andExpect(jsonPath("$[1].id", equalTo(SECOND_PET_ID.intValue())))
-                            .andExpect(jsonPath("$[1].name", equalTo(SECOND_PET_NAME)))
-                            .andExpect(jsonPath("$[1].code", equalTo(SECOND_PET_CODE)))
-                            .andExpect(jsonPath("$[1].type", equalTo(SECOND_PET_TYPE.toString())))
-                            .andExpect(jsonPath("$[1].furColor", equalTo(SECOND_PET_FUR_COLOR.toString())))
-                            .andExpect(jsonPath("$[1].countryOrigin", equalTo(SECOND_PET_COUNTRY_OF_ORIGIN.toString())));
+                            .andExpect(jsonPath("$.content[1].id", equalTo(SECOND_PET_ID.intValue())))
+                            .andExpect(jsonPath("$.content[1].name", equalTo(SECOND_PET_NAME)))
+                            .andExpect(jsonPath("$.content[1].code", equalTo(SECOND_PET_CODE)))
+                            .andExpect(jsonPath("$.content[1].type", equalTo(SECOND_PET_TYPE.toString())))
+                            .andExpect(jsonPath("$.content[1].furColor", equalTo(SECOND_PET_FUR_COLOR.toString())))
+                            .andExpect(jsonPath("$.content[1].countryOrigin", equalTo(SECOND_PET_COUNTRY_OF_ORIGIN.toString())));
                 }
             }
 

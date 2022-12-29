@@ -2,6 +2,8 @@ package com.wisercat.bestfriend.service.user_service.get_use_case;
 
 import com.wisercat.bestfriend.dto.user.UserDto;
 import com.wisercat.bestfriend.exception.NotFoundException;
+import com.wisercat.bestfriend.model.User;
+import com.wisercat.bestfriend.service.mapper.Mapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -18,11 +20,13 @@ import static org.mockito.Mockito.mock;
 class UserGetServiceTest {
     private UserGetRepository repository;
     private UserGetServiceImpl service;
+    private Mapper<UserDto, User> mapper;
 
     @BeforeEach
     void init() {
         repository = mock(getUserGetRepositoryImpl().getClass());
-        service = new UserGetServiceImpl(repository);
+        mapper = mock(getUserMapperImpl().getClass());
+        service = new UserGetServiceImpl(repository, mapper);
     }
 
     @Nested
@@ -36,7 +40,7 @@ class UserGetServiceTest {
             @BeforeEach
             void init() {
                 given(repository.getUserByUsername(USER_USERNAME))
-                        .willReturn(Optional.of(new UserDto(USER_USERNAME)));
+                        .willReturn(Optional.of(new User(USER_USERNAME)));
             }
 
             @Test

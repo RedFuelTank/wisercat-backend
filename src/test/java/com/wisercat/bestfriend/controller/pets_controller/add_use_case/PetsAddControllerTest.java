@@ -1,5 +1,6 @@
 package com.wisercat.bestfriend.controller.pets_controller.add_use_case;
 
+import com.wisercat.bestfriend.dto.pet.RegistrationPetDto;
 import com.wisercat.bestfriend.requestbuilder.pets.PetsPostRequestBuilder;
 import com.wisercat.bestfriend.dto.pet.PetDto;
 import com.wisercat.bestfriend.enums.CountryOrigin;
@@ -19,6 +20,7 @@ import static com.wisercat.bestfriend.config.pets.WebPetsTestFactory.*;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -46,41 +48,44 @@ class PetsAddControllerTest {
     @DisplayName("Save a new pet data")
     class Save {
         private final static String PET_NAME = "Fluffy";
+        private final static String PET_OWNER_NAME = "user";
         private final static String PET_CODE = "7ebf40ac-146b-4c1f-a07f-64e2d21f215f";
         private final static PetType PET_TYPE = PetType.CAT;
         private final static Long PET_ID = 1L;
         private final static FurColor PET_FUR_COLOR = FurColor.BLACK;
         private final static CountryOrigin PET_COUNTRY_OF_ORIGIN = CountryOrigin.ESTONIA;
 
-        private PetDto petDto;
+        private PetDto output;
+        private RegistrationPetDto input;
 
         @Nested
         @DisplayName("When the information of the created pet's data is valid")
         class WhenValidInformationIsProvided {
             @BeforeEach
             void init() {
-                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-                petDto.setId(PET_ID);
-                given(service.save(any())).willReturn(petDto);
+                output = new PetDto(PET_ID, PET_OWNER_NAME, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                input = new RegistrationPetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                given(service.save(any(), any())).willReturn(output);
             }
 
             @Test
             @DisplayName("Should return HTTP response code 201")
             void shouldReturnHttpResponseCodeCreated() throws Exception {
-                requestBuilder.save(petDto)
+                requestBuilder.save(input, PET_OWNER_NAME)
                         .andExpect(status().isCreated());
             }
 
             @Test
             @DisplayName("Should return HTTP response with JSON media-type")
             void shouldReturnHttpResponseJsonMediaType() throws Exception {
-                System.out.println(requestBuilder.save(petDto).andReturn().getResponse().getContentAsString());
+                requestBuilder.save(input, PET_OWNER_NAME)
+                        .andExpect(content().contentType(MediaType.APPLICATION_JSON));
             }
 
             @Test
             @DisplayName("Should return correct HTTP response body")
             void shouldReturnCorrectHttpResponseBody() throws Exception {
-                requestBuilder.save(petDto)
+                requestBuilder.save(input, PET_OWNER_NAME)
                         .andExpect(jsonPath("$.id", equalTo(PET_ID.intValue())))
                         .andExpect(jsonPath("$.name", equalTo(PET_NAME)))
                         .andExpect(jsonPath("$.code", equalTo(PET_CODE)))
@@ -100,27 +105,27 @@ class PetsAddControllerTest {
 
                 @BeforeEach
                 void init() {
-                    petDto = new PetDto("", "", PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                    input = new RegistrationPetDto("", "", PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
                 }
 
                 @Test
                 @DisplayName("Should return HTTP response code 400")
                 void shouldReturnHttpResponseCodeBadRequest() throws Exception {
-                    requestBuilder.save(petDto)
+                    requestBuilder.save(input, PET_OWNER_NAME)
                             .andExpect(status().isBadRequest());
                 }
 
                 @Test
                 @DisplayName("Should return HTTP response with JSON media-type")
                 void shouldReturnCorrectHttpResponseJsonMediaType() throws Exception {
-                    requestBuilder.save(petDto)
+                    requestBuilder.save(input, PET_OWNER_NAME)
                             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
                 }
 
                 @Test
                 @DisplayName("Should return correct error's name for empty pet's data")
                 void shouldReturnCorrectErrorNamePetCode() throws Exception {
-                    requestBuilder.save(petDto)
+                    requestBuilder.save(input, PET_OWNER_NAME)
                             .andExpect(jsonPath(
                                     "$.errors[?(@.field == 'code')].name",
                                     contains(VALIDATION_ERROR_SIZE_NAME)
@@ -139,27 +144,27 @@ class PetsAddControllerTest {
 
                 @BeforeEach
                 void init() {
-                    petDto = new PetDto(null, null, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                    input = new RegistrationPetDto(null, null, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
                 }
 
                 @Test
                 @DisplayName("Should return HTTP response code 400")
                 void shouldReturnHttpResponseCodeBadRequest() throws Exception {
-                    requestBuilder.save(petDto)
+                    requestBuilder.save(input, PET_OWNER_NAME)
                             .andExpect(status().isBadRequest());
                 }
 
                 @Test
                 @DisplayName("Should return correct HTTP response media-type")
                 void shouldReturnCorrectHttpResponseMediaType() throws Exception {
-                    requestBuilder.save(petDto)
+                    requestBuilder.save(input, PET_OWNER_NAME)
                             .andExpect(content().contentType(MediaType.APPLICATION_JSON));
                 }
 
                 @Test
                 @DisplayName("Should return correct error's name for null pet's data")
                 void shouldReturnCorrectErrorNamePetCode() throws Exception {
-                    requestBuilder.save(petDto)
+                    requestBuilder.save(input, PET_OWNER_NAME)
                             .andExpect(jsonPath(
                                     "$.errors[?(@.field == 'code')].name",
                                     contains(VALIDATION_ERROR_NULL_NAME)
@@ -178,21 +183,22 @@ class PetsAddControllerTest {
 
             @BeforeEach
             void returnPet() {
-                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-                given(service.save(any())).willReturn(petDto);
+                input = new RegistrationPetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                output = new PetDto(PET_ID, PET_OWNER_NAME, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                given(service.save(any(), any())).willReturn(output);
             }
 
             @Test
             @DisplayName("Should return Http response code 201")
             void returnCorrectHttpStatusCodeCreated() throws Exception {
-                requestBuilder.save(petDto)
+                requestBuilder.save(input, PET_OWNER_NAME)
                         .andExpect(status().isCreated());
             }
 
             @Test
             @DisplayName("Should return pet data with correct data")
             void returnCorrectPet() throws Exception {
-                requestBuilder.save(petDto)
+                requestBuilder.save(input, PET_OWNER_NAME)
                         .andExpect(jsonPath("$.name", equalTo(PET_NAME)))
                         .andExpect(jsonPath("$.code", equalTo(PET_CODE)))
                         .andExpect(jsonPath("$.type", equalTo(PET_TYPE.toString())))
@@ -209,9 +215,9 @@ class PetsAddControllerTest {
 
             @BeforeEach
             void init() {
-                petDto = new PetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
-                petDto.setId(PET_ID);
-                given(service.save(any()))
+                output = new PetDto(PET_ID, PET_OWNER_NAME, PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                input = new RegistrationPetDto(PET_CODE, PET_NAME, PET_TYPE, PET_FUR_COLOR, PET_COUNTRY_OF_ORIGIN);
+                given(service.save(any(), any()))
                         .willThrow(new DataAlreadyExistsException(
                                 DATA_ALREADY_EXISTS_EXCEPTION_MESSAGE
                         ));
@@ -220,14 +226,14 @@ class PetsAddControllerTest {
             @Test
             @DisplayName("Should return HTTP response code 409")
             void shouldReturnHttpResponseCodeConflict() throws Exception {
-                requestBuilder.save(petDto)
+                requestBuilder.save(input, PET_OWNER_NAME)
                         .andExpect(status().isConflict());
             }
 
             @Test
             @DisplayName("Should return HTTP response with JSON media-type")
             void shouldReturnHttpResponseJsonMediaType() throws Exception {
-                requestBuilder.save(petDto)
+                requestBuilder.save(input, PET_OWNER_NAME)
                         .andExpect(
                                 content().contentType(MediaType.APPLICATION_JSON)
                         );
@@ -236,7 +242,7 @@ class PetsAddControllerTest {
             @Test
             @DisplayName("Should return correct HTTP response body")
             void shouldReturnCorrectHttpResponseBody() throws Exception {
-                requestBuilder.save(petDto)
+                requestBuilder.save(input, PET_OWNER_NAME)
                         .andExpect(jsonPath("$.name", equalTo(
                                 DataAlreadyExistsException.class.getSimpleName()
                         )))

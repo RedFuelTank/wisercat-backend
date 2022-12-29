@@ -1,8 +1,10 @@
 package com.wisercat.bestfriend.config.pets;
 
 import com.wisercat.bestfriend.controller.pets_controller.add_use_case.PetsAddService;
+import com.wisercat.bestfriend.controller.pets_controller.edit_use_case.PetsEditService;
 import com.wisercat.bestfriend.controller.pets_controller.get_use_case.PetsGetService;
 import com.wisercat.bestfriend.dto.pet.PetDto;
+import com.wisercat.bestfriend.dto.pet.RegistrationPetDto;
 import com.wisercat.bestfriend.model.Pet;
 import com.wisercat.bestfriend.service.mapper.Mapper;
 import com.wisercat.bestfriend.service.pets_service.add_use_case.PetsAddRepository;
@@ -30,12 +32,12 @@ public final class WebPetsTestFactory {
             }
 
             @Override
-            public List<PetDto> getAll(org.springframework.data.domain.Pageable pageable) {
+            public Page<PetDto> getAll(Pageable pageable) {
                 return null;
             }
 
             @Override
-            public List<PetDto> getUserPetsByPages(String username, org.springframework.data.domain.Pageable pageable) {
+            public Page<PetDto> getUserPetsByPages(String username, Pageable pageable) {
                 return null;
             }
         };
@@ -44,7 +46,7 @@ public final class WebPetsTestFactory {
     public static PetsAddService getPetsAddServiceImpl() {
         return new PetsAddService() {
             @Override
-            public PetDto save(PetDto pet) {
+            public PetDto save(RegistrationPetDto pet, String username) {
                 return null;
             }
         };
@@ -58,8 +60,13 @@ public final class WebPetsTestFactory {
             }
 
             @Override
-            public List<Pet> getAllByOwnerUsername(String username, Pageable pageable) {
+            public Page<Pet> getAllByOwnerUsername(String username, Pageable pageable) {
                 return null;
+            }
+
+            @Override
+            public Optional<Pet> getPetByIdAndOwnerUsername(Long id, String ownerUsername) {
+                return Optional.empty();
             }
 
             @Override
@@ -78,7 +85,7 @@ public final class WebPetsTestFactory {
         return new PetsAddRepository() {
 
             @Override
-            public PetDto save(PetDto petDto) {
+            public Pet save(Pet pet) {
                 return null;
             }
         };
@@ -95,6 +102,11 @@ public final class WebPetsTestFactory {
             public Pet toEntity(PetDto petDto) {
                 return null;
             }
+        };
+    }
+
+    public static PetsEditService getPetsEditServiceImpl() {
+        return new PetsEditService() {
         };
     }
 
