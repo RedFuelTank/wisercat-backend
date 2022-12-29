@@ -77,8 +77,10 @@ public class SecurityConfig {
     public static void main(String[] args) {
         String userPasswordEncrypted = new BCryptPasswordEncoder(10).encode("user");
         String adminPasswordEncrypted = new BCryptPasswordEncoder(10).encode("admin");
+        String wisercatPasswordEncrypted = new BCryptPasswordEncoder(10).encode("wisercat");
         System.out.println("User password: " + userPasswordEncrypted);
         System.out.println("Admin password: " + adminPasswordEncrypted);
+        System.out.println("Wisercat password: " + wisercatPasswordEncrypted);
     }
 
 

@@ -77,4 +77,16 @@
             <column name="authority" value="ROLE_ADMIN"/>
         </insert>
     </changeSet>
+
+    <changeSet id="V5__ADD_SECOND_USER" author="">
+        <insert tableName="Users">
+            <column name="username" value="wisercat"/>
+            <column name="password" value="$2a$10$zXV6fycDMHY3JJXIwl/47u0N5rdEPsTmMXmB3Cl1o6qcv0Ovztgpi"/>
+            <column name="enabled" value="true"/>
+        </insert>
+        <insert tableName="Authorities">
+            <column name="username" value="wisercat"/>
+            <column name="authority" value="ROLE_USER"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
