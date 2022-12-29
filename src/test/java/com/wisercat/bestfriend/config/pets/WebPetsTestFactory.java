@@ -104,10 +104,4 @@ public final class WebPetsTestFactory {
             }
         };
     }
-
-    public static PetsEditService getPetsEditServiceImpl() {
-        return new PetsEditService() {
-        };
-    }
-
 }
